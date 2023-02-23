@@ -1,0 +1,32 @@
+import socket
+import threading
+
+def check_port(ip, port):
+    # Create a socket object
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Try to connect to the ip and port
+    try:
+        s.connect((ip, port))
+        # If successful, print the open port
+        print(f"Port {port} is open")
+    except:
+        # If not successful, do nothing
+        pass
+    finally:
+        # Close the socket
+        s.close()
+
+def list_open_ports(ip, start_port, end_port):
+    # Create an empty list of threads
+    threads = []
+    # Loop through the range of ports
+    for port in range(start_port, end_port + 1):
+        # Create a thread that calls check_port function with ip and port as arguments
+        t = threading.Thread(target=check_port, args=(ip, port))
+        # Append the thread to the list of threads
+        threads.append(t)
+        # Start the thread
+        t.start()
+    # Wait for all threads to finish
+    for t in threads:
+        t.join()
